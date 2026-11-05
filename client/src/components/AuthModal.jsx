@@ -1,0 +1,142 @@
+import React, { useState } from 'react';
+import { BookOpen, Lock, Mail, User, ArrowRight } from 'lucide-react';
+import api from '../services/api';
+
+export default function AuthModal({ onLoginSuccess }) {
+  const [isRegister, setIsRegister] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const endpoint = isRegister ? '/auth/register' : '/auth/login';
+      const payload = isRegister 
+        ? { name: formData.name, email: formData.email, password: formData.password }
+        : { email: formData.email, password: formData.password };
+
+      const res = await api.post(endpoint, payload);
+      localStorage.setItem('daybook_token', res.data.token);
+      localStorage.setItem('daybook_user', JSON.stringify(res.data.user));
+      onLoginSuccess(res.data.user);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Authentication failed. Please check credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-8 shadow-xl">
+        {/* App Branding */}
+        <div className="text-center mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-blue-500/25 mb-4">
+            <BookOpen className="w-7 h-7" />
+          </div>
+          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Personal Digital Day Book
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Smart, secure record management for daily transactions & accounts
+          </p>
+        </div>
+
+        {error && (
+          <div className="mb-5 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 text-xs">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {isRegister && (
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Your Full Name
+              </label>
+              <div className="relative flex items-center">
+                <User className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+                <input
+                  type="text"
+                  required={isRegister}
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="e.g. Ramesh Sharma"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
+              </div>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              Email Address
+            </label>
+            <div className="relative flex items-center">
+              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+              <input
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="name@example.com"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              Password
+            </label>
+            <div className="relative flex items-center">
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+              <input
+                type="password"
+                required
+                minLength="6"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="••••••••"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center space-x-2 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-blue-500/20 transition active:scale-98 disabled:opacity-50 mt-2"
+          >
+            <span>{loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In to Day Book'}</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </form>
+
+        {/* Toggle Mode */}
+        <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 text-center">
+          <p className="text-xs text-slate-500">
+            {isRegister ? 'Already have a Day Book account?' : "Don't have an account yet?"}{' '}
+            <button
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError('');
+              }}
+              className="text-blue-600 hover:underline font-semibold ml-1"
+            >
+              {isRegister ? 'Sign In' : 'Sign Up Free'}
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

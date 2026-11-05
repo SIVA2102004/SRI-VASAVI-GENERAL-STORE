@@ -1,0 +1,28 @@
+{
+  "name": "personal-digital-day-book",
+  "version": "1.0.0",
+  "description": "Personal Digital Day Book – Desktop App",
+  "main": "electron-main.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "app": "electron .",
+    "dev:app": "concurrently \"node server/index.js\" \"electron .\"",
+    "build": "npm --prefix client run build",
+    "test": "node server/test_verification.js"
+  },
+  "keywords": [
+    "daybook",
+    "record-management",
+    "accounting",
+    "electron",
+    "desktop-app"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.1",
+    "wait-on": "^8.0.1"
+  }
+}
