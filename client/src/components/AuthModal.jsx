@@ -72,14 +72,18 @@ export default function AuthModal({ onLoginSuccess }) {
       <div className="w-full max-w-sm sm:max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xl">
         {/* App Branding */}
         <div className="text-center mb-6">
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-blue-500/25 mb-3">
-            <BookOpen className="w-6 h-6 sm:w-7 sm:h-7" />
+          <div className="w-20 h-20 rounded-full mx-auto p-1 bg-gradient-to-tr from-blue-600 via-indigo-500 to-amber-400 shadow-xl shadow-blue-500/25 mb-3 flex items-center justify-center">
+            <img 
+              src="/logo.png" 
+              alt="Sri Vasavi General Store Logo" 
+              className="w-full h-full object-cover rounded-full border-2 border-white dark:border-slate-800"
+            />
           </div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Sri Vasavi Day Book
+            Sri Vasavi General Store
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Smart record management for daily transactions & accounts
+          <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold mt-0.5">
+            Personal Digital Day Book
           </p>
         </div>
 

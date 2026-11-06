@@ -27,13 +27,17 @@ export default function Sidebar({ currentTab, setCurrentTab, user, onLogout, dar
   return (
     <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-screen shrink-0 transition-colors duration-200">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center space-x-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-          <BookOpen className="w-5 h-5" />
-        </div>
-        <div>
-          <h1 className="font-bold text-slate-800 dark:text-white tracking-tight leading-none text-lg">DayBook</h1>
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Personal Record Manager</p>
+      <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center space-x-3">
+        <img 
+          src="/logo.png" 
+          alt="Sri Vasavi Logo" 
+          className="w-11 h-11 rounded-full object-cover border-2 border-blue-500 shadow-md shrink-0" 
+        />
+        <div className="min-w-0">
+          <h1 className="font-bold text-slate-800 dark:text-white tracking-tight leading-tight text-base truncate">
+            Sri Vasavi
+          </h1>
+          <p className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold truncate">General Store DayBook</p>
         </div>
       </div>
 
