@@ -15,20 +15,53 @@ export default function AuthModal({ onLoginSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const cleanEmail = formData.email.trim().toLowerCase();
+    const cleanName = formData.name.trim();
+
+    if (!cleanEmail) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+      setError('Please enter a valid email address (e.g. name@gmail.com).');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (isRegister && !cleanName) {
+      setError('Please enter your full name.');
+      return;
+    }
+
     setLoading(true);
 
     try {
       const endpoint = isRegister ? '/auth/register' : '/auth/login';
       const payload = isRegister 
-        ? { name: formData.name, email: formData.email, password: formData.password }
-        : { email: formData.email, password: formData.password };
+        ? { name: cleanName, email: cleanEmail, password: formData.password }
+        : { email: cleanEmail, password: formData.password };
 
       const res = await api.post(endpoint, payload);
       localStorage.setItem('daybook_token', res.data.token);
       localStorage.setItem('daybook_user', JSON.stringify(res.data.user));
       onLoginSuccess(res.data.user);
     } catch (err) {
-      setError(err.response?.data?.error || 'Authentication failed. Please check credentials.');
+      const serverMsg = err.response?.data?.error;
+      if (serverMsg) {
+        setError(serverMsg);
+      } else if (err.response?.status === 401) {
+        setError('Incorrect email or password. If you do not have an account yet, click "Sign Up Free" below.');
+      } else if (err.response?.status === 409) {
+        setError('An account with this email already exists. Please click "Sign In" below.');
+      } else {
+        setError('Connection error. Please check your network and try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -51,7 +84,7 @@ export default function AuthModal({ onLoginSuccess }) {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 text-xs">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 text-xs leading-relaxed">
             {error}
           </div>
         )}
@@ -114,23 +147,24 @@ export default function AuthModal({ onLoginSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center space-x-2 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-blue-500/20 transition active:scale-98 disabled:opacity-50 mt-2"
+            className="w-full flex items-center justify-center space-x-2 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-blue-500/20 transition active:scale-98 disabled:opacity-50 mt-2 cursor-pointer"
           >
             <span>{loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In to Day Book'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        {/* Toggle Mode */}
+        {/* Mode Toggle Button */}
         <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
           <p className="text-xs text-slate-500">
             {isRegister ? 'Already have a Day Book account?' : "Don't have an account yet?"}{' '}
             <button
+              type="button"
               onClick={() => {
                 setIsRegister(!isRegister);
                 setError('');
               }}
-              className="text-blue-600 hover:underline font-semibold ml-1 cursor-pointer"
+              className="text-blue-600 dark:text-blue-400 hover:underline font-semibold ml-1 cursor-pointer"
             >
               {isRegister ? 'Sign In' : 'Sign Up Free'}
             </button>
