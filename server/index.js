@@ -8,6 +8,7 @@ const peopleRoutes = require('./routes/people');
 const transactionRoutes = require('./routes/transactions');
 const analyticsRoutes = require('./routes/analytics');
 const backupRoutes = require('./routes/backup');
+const resetRoutes = require('./routes/reset');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +30,7 @@ app.use('/api/people', peopleRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/backup', backupRoutes);
+app.use('/api/reset', resetRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
