@@ -1,15 +1,30 @@
 @import "tailwindcss";
 
 @layer base {
-  body {
+  html, body {
     @apply antialiased text-slate-800 bg-slate-50 dark:bg-slate-950 dark:text-slate-100;
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
+}
+
+/* Ensure mobile safe areas for notches and bottom navigation bars */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
