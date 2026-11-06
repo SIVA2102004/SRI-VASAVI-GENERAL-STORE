@@ -1,21 +1,20 @@
 {
   "name": "personal-digital-day-book",
   "version": "1.0.0",
-  "description": "Personal Digital Day Book – Desktop App",
-  "main": "electron-main.js",
+  "description": "Personal Digital Day Book – Sri Vasavi General Store",
+  "main": "server/index.js",
   "scripts": {
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
     "start": "node server/index.js",
     "app": "electron .",
-    "dev:app": "concurrently \"node server/index.js\" \"electron .\"",
-    "build": "npm --prefix client run build",
     "test": "node server/test_verification.js"
   },
   "keywords": [
     "daybook",
     "record-management",
     "accounting",
-    "electron",
-    "desktop-app"
+    "sri-vasavi"
   ],
   "author": "",
   "license": "ISC",
